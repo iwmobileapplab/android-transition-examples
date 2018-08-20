@@ -1,5 +1,6 @@
 /*
  * Copyright 2018 Google LLC
+ * Modified Copyright (C) 2018 Mobile Application Lab
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,22 +21,23 @@ import static com.google.samples.gridtopager.adapter.ImageData.IMAGE_DRAWABLES;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
 import com.google.samples.gridtopager.fragment.ImageFragment;
 
 public class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
-  public ImagePagerAdapter(Fragment fragment) {
-    // Note: Initialize with the child fragment manager.
-    super(fragment.getChildFragmentManager());
-  }
+    public ImagePagerAdapter(Fragment fragment) {
+        // Note: Initialize with the child fragment manager.
+        super(fragment.getChildFragmentManager());
+    }
 
-  @Override
-  public int getCount() {
-    return IMAGE_DRAWABLES.length;
-  }
+    @Override
+    public int getCount() {
+        return IMAGE_DRAWABLES.length;
+    }
 
-  @Override
-  public Fragment getItem(int position) {
-    return ImageFragment.newInstance(IMAGE_DRAWABLES[position]);
-  }
+    @Override
+    public Fragment getItem(int position) {
+        return ImageFragment.newInstance(IMAGE_DRAWABLES[position]);
+    }
 }

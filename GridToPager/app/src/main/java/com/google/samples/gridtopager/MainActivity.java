@@ -1,5 +1,6 @@
 /*
  * Copyright 2018 Google LLC
+ * Modified Copyright (C) 2018 Mobile Application Lab
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,46 +17,43 @@
 package com.google.samples.gridtopager;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+
 import com.google.samples.gridtopager.fragment.GridFragment;
-import com.google.samples.gridtopager.R;
 
 /**
  * Grid to pager app's main activity.
  */
 public class MainActivity extends AppCompatActivity {
 
-  /**
-   * Holds the current image position to be shared between the grid and the pager fragments. This
-   * position updated when a grid item is clicked, or when paging the pager.
-   *
-   * In this demo app, the position always points to an image index at the {@link
-   * com.google.samples.gridtopager.adapter.ImageData} class.
-   */
-  public static int currentPosition;
-  private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
+    /**
+     * Holds the current image position to be shared between the grid and the pager fragments. This
+     * position updated when a grid item is clicked, or when paging the pager.
+     * <p>
+     * In this demo app, the position always points to an image index at the {@link
+     * com.google.samples.gridtopager.adapter.ImageData} class.
+     */
+    public static int currentPosition;
+    private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-    if (savedInstanceState != null) {
-      currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
-      // Return here to prevent adding additional GridFragments when changing orientation.
-      return;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        if (savedInstanceState != null) {
+            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
+            // Return here to prevent adding additional GridFragments when changing orientation.
+            return;
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, new GridFragment(), GridFragment.class.getSimpleName())
+                .commit();
     }
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    fragmentManager
-        .beginTransaction()
-        .add(R.id.fragment_container, new GridFragment(), GridFragment.class.getSimpleName())
-        .commit();
-  }
 
-  @Override
-  protected void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putInt(KEY_CURRENT_POSITION, currentPosition);
-  }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_CURRENT_POSITION, currentPosition);
+    }
 }
