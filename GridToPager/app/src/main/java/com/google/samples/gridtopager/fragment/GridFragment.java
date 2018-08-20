@@ -27,7 +27,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import com.google.samples.gridtopager.adapter.GridAdapter;
 import com.google.samples.gridtopager.MainActivity;
 import com.google.samples.gridtopager.R;

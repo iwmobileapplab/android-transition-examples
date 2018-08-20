@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-<ImageView
+<net.mobileapplab.library.view.MultiTouchImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/image"
     android:layout_width="match_parent"

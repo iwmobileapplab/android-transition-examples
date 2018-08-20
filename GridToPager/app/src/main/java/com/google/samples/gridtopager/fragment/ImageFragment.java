@@ -25,6 +25,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -32,6 +33,9 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.samples.gridtopager.R;
+
+import net.mobileapplab.library.view.MultiTouchImageView;
+import net.mobileapplab.library.view.SwipeToDismissTouchListener;
 
 /**
  * A fragment for displaying an image.
@@ -56,10 +60,27 @@ public class ImageFragment extends Fragment {
 
     Bundle arguments = getArguments();
     @DrawableRes int imageRes = arguments.getInt(KEY_IMAGE_RES);
+    final MultiTouchImageView imageView = view.findViewById(R.id.image);
+
 
     // Just like we do when binding views at the grid, we set the transition name to be the string
     // value of the image res.
-    view.findViewById(R.id.image).setTransitionName(String.valueOf(imageRes));
+      SwipeToDismissTouchListener listener = SwipeToDismissTouchListener.createFromView(imageView, new SwipeToDismissTouchListener.Callback() {
+          @Override
+          public void onDismiss() {
+              Fragment pf = getParentFragment();
+              if (pf != null && pf.getActivity() != null) {
+                  pf.getActivity().onBackPressed();
+              }
+          }
+
+          @Override
+          public void onMove(float translationY) {
+
+          }
+      });
+      imageView.setOnTouchListener(listener);
+      imageView.setTransitionName(String.valueOf(imageRes));
 
     // Load the image with Glide to prevent OOM error when the image drawables are very large.
     Glide.with(this)
@@ -71,7 +92,15 @@ public class ImageFragment extends Fragment {
             // The postponeEnterTransition is called on the parent ImagePagerFragment, so the
             // startPostponedEnterTransition() should also be called on it to get the transition
             // going in case of a failure.
-            getParentFragment().startPostponedEnterTransition();
+              imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener(){
+                  @Override
+                  public boolean onPreDraw() {
+                      imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                      imageView.isCompleteInitialPreDraw = true;
+                      getParentFragment().startPostponedEnterTransition();
+                      return true;
+                  }
+              });
             return false;
           }
 
@@ -81,7 +110,15 @@ public class ImageFragment extends Fragment {
             // The postponeEnterTransition is called on the parent ImagePagerFragment, so the
             // startPostponedEnterTransition() should also be called on it to get the transition
             // going when the image is ready.
-            getParentFragment().startPostponedEnterTransition();
+              imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener(){
+                  @Override
+                  public boolean onPreDraw() {
+                      imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                      imageView.isCompleteInitialPreDraw = true;
+                      getParentFragment().startPostponedEnterTransition();
+                      return true;
+                  }
+              });
             return false;
           }
         })
