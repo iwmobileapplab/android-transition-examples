@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.samples.gridtopager.fragment;
+package net.mobileapplab.library.gallery;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,11 +28,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.samples.gridtopager.MainActivity;
-import com.google.samples.gridtopager.adapter.ImagePagerAdapter;
-import com.google.samples.gridtopager.R;
-
 import net.mobileapplab.library.GalleryItem;
+import net.mobileapplab.library.R;
+import net.mobileapplab.library.TransitionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,11 +62,11 @@ public class ImagePagerFragment extends Fragment {
         viewPager.setAdapter(new ImagePagerAdapter(this, list));
         // Set the current position and add a listener that will update the selection coordinator when
         // paging the images.
-        viewPager.setCurrentItem(MainActivity.currentPosition);
+        viewPager.setCurrentItem(TransitionManager.currentPosition);
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                MainActivity.currentPosition = position;
+                TransitionManager.currentPosition = position;
             }
         });
 
@@ -87,7 +85,7 @@ public class ImagePagerFragment extends Fragment {
         ArrayList<GalleryItem> list = new ArrayList<>();
         final Bundle args = getArguments();
         if (args != null) {
-            list.addAll(args.getParcelableArrayList(ARGS_GALLERY));
+            list.addAll(args.<GalleryItem>getParcelableArrayList(ARGS_GALLERY));
         }
         return list;
     }
@@ -110,7 +108,7 @@ public class ImagePagerFragment extends Fragment {
                 // At this stage, the method will simply return the fragment at the position and will
                 // not create a new one.
                 Fragment currentFragment = (Fragment) viewPager.getAdapter()
-                        .instantiateItem(viewPager, MainActivity.currentPosition);
+                        .instantiateItem(viewPager, TransitionManager.currentPosition);
                 View view = currentFragment.getView();
                 if (view == null) {
                     return;

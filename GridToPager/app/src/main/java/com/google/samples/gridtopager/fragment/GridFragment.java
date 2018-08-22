@@ -31,10 +31,10 @@ import android.view.ViewGroup;
 
 import com.google.samples.gridtopager.Gallery;
 import com.google.samples.gridtopager.adapter.GridAdapter;
-import com.google.samples.gridtopager.MainActivity;
 import com.google.samples.gridtopager.R;
 
 import net.mobileapplab.library.GalleryItem;
+import net.mobileapplab.library.TransitionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,12 +80,12 @@ public class GridFragment extends Fragment {
                 if (layoutManager == null) {
                     return;
                 }
-                View viewAtPosition = layoutManager.findViewByPosition(MainActivity.currentPosition);
+                View viewAtPosition = layoutManager.findViewByPosition(TransitionManager.currentPosition );
                 // Scroll to position if the view for the current position is null (not currently part of
                 // layout manager children), or it's not completely visible.
                 if (viewAtPosition == null || layoutManager
                         .isViewPartiallyVisible(viewAtPosition, false, true)) {
-                    recyclerView.post(() -> layoutManager.scrollToPosition(MainActivity.currentPosition));
+                    recyclerView.post(() -> layoutManager.scrollToPosition(TransitionManager.currentPosition ));
                 }
             }
         });
@@ -105,7 +105,7 @@ public class GridFragment extends Fragment {
             public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                 // Locate the ViewHolder for the clicked position.
                 RecyclerView.ViewHolder selectedViewHolder = recyclerView
-                        .findViewHolderForAdapterPosition(MainActivity.currentPosition);
+                        .findViewHolderForAdapterPosition(TransitionManager.currentPosition);
                 if (selectedViewHolder == null) {
                     return;
                 }

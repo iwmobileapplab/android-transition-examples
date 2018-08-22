@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.google.samples.gridtopager.fragment;
+package net.mobileapplab.library.gallery;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
@@ -34,9 +34,9 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.samples.gridtopager.R;
 
 import net.mobileapplab.library.GalleryItem;
+import net.mobileapplab.library.R;
 import net.mobileapplab.library.view.MultiTouchImageView;
 import net.mobileapplab.library.view.SwipeToDismissTouchListener;
 

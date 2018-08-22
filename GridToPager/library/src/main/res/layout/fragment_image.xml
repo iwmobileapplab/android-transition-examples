@@ -22,5 +22,5 @@
     android:id="@+id/image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:contentDescription="@string/image_description"
+    android:contentDescription="@null"
     android:scaleType="fitCenter" />

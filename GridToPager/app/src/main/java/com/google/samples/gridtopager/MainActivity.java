@@ -21,16 +21,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.samples.gridtopager.fragment.GridFragment;
 
+import net.mobileapplab.library.TransitionManager;
+
 /**
  * Grid to pager app's main activity.
  */
 public class MainActivity extends AppCompatActivity {
-
-    /**
-     * Holds the current image position to be shared between the grid and the pager fragments. This
-     * position updated when a grid item is clicked, or when paging the pager.
-     */
-    public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
 
     @Override
@@ -38,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState != null) {
-            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
+            TransitionManager.currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
             // Return here to prevent adding additional GridFragments when changing orientation.
             return;
         }
@@ -51,6 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_CURRENT_POSITION, currentPosition);
+        outState.putInt(KEY_CURRENT_POSITION, TransitionManager.currentPosition);
     }
 }

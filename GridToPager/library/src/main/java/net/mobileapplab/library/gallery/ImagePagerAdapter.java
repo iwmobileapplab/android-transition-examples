@@ -15,13 +15,11 @@
  * limitations under the License.
  */
 
-package com.google.samples.gridtopager.adapter;
+package net.mobileapplab.library.gallery;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
-import com.google.samples.gridtopager.fragment.ImageFragment;
 
 import net.mobileapplab.library.GalleryItem;
 

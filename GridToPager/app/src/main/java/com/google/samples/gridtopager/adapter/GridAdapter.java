@@ -35,10 +35,11 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.samples.gridtopager.MainActivity;
 import com.google.samples.gridtopager.R;
 import com.google.samples.gridtopager.adapter.GridAdapter.ImageViewHolder;
-import com.google.samples.gridtopager.fragment.ImagePagerFragment;
+
+import net.mobileapplab.library.TransitionManager;
+import net.mobileapplab.library.gallery.ImagePagerFragment;
 
 import net.mobileapplab.library.GalleryItem;
 
@@ -92,7 +93,6 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
         return galleryItems.size();
     }
 
-
     /**
      * Default {@link ViewHolderListener} implementation.
      */
@@ -111,7 +111,7 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
         @Override
         public void onLoadCompleted(ImageView view, int position) {
             // Call startPostponedEnterTransition only when the 'selected' image loading is completed.
-            if (MainActivity.currentPosition != position) {
+            if (TransitionManager.currentPosition != position) {
                 return;
             }
             if (enterTransitionStarted.getAndSet(true)) {
@@ -131,7 +131,7 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
         @Override
         public void onItemClicked(View view, int position) {
             // Update the position.
-            MainActivity.currentPosition = position;
+            TransitionManager.currentPosition = position;
 
             // Exclude the clicked card from the exit transition (e.g. the card will disappear immediately
             // instead of fading out with the rest to prevent an overlapping animation of fade and move).
