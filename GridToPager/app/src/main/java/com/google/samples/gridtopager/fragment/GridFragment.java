@@ -29,10 +29,14 @@ import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 
+import com.google.samples.gridtopager.Gallery;
 import com.google.samples.gridtopager.adapter.GridAdapter;
 import com.google.samples.gridtopager.MainActivity;
 import com.google.samples.gridtopager.R;
 
+import net.mobileapplab.library.GalleryItem;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +45,7 @@ import java.util.Map;
  */
 public class GridFragment extends Fragment {
 
+    private final ArrayList<GalleryItem> gallery = Gallery.beaches;
     private RecyclerView recyclerView;
 
     @Nullable
@@ -48,7 +53,7 @@ public class GridFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_grid, container, false);
-        recyclerView.setAdapter(new GridAdapter(this));
+        recyclerView.setAdapter(new GridAdapter(this, gallery));
 
         prepareTransitions();
         postponeEnterTransition();
@@ -72,6 +77,9 @@ public class GridFragment extends Fragment {
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 recyclerView.removeOnLayoutChangeListener(this);
                 final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (layoutManager == null) {
+                    return;
+                }
                 View viewAtPosition = layoutManager.findViewByPosition(MainActivity.currentPosition);
                 // Scroll to position if the view for the current position is null (not currently part of
                 // layout manager children), or it's not completely visible.
@@ -98,13 +106,12 @@ public class GridFragment extends Fragment {
                 // Locate the ViewHolder for the clicked position.
                 RecyclerView.ViewHolder selectedViewHolder = recyclerView
                         .findViewHolderForAdapterPosition(MainActivity.currentPosition);
-                if (selectedViewHolder == null || selectedViewHolder.itemView == null) {
+                if (selectedViewHolder == null) {
                     return;
                 }
 
                 // Map the first shared element name to the child ImageView.
-                sharedElements
-                        .put(names.get(0), selectedViewHolder.itemView.findViewById(R.id.card_image));
+                sharedElements.put(names.get(0), selectedViewHolder.itemView.findViewById(R.id.card_image));
             }
         });
     }

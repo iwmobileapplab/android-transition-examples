@@ -20,7 +20,6 @@ package com.google.samples.gridtopager.fragment;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,6 +36,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.samples.gridtopager.R;
 
+import net.mobileapplab.library.GalleryItem;
 import net.mobileapplab.library.view.MultiTouchImageView;
 import net.mobileapplab.library.view.SwipeToDismissTouchListener;
 
@@ -45,12 +45,12 @@ import net.mobileapplab.library.view.SwipeToDismissTouchListener;
  */
 public class ImageFragment extends Fragment {
 
-    private static final String KEY_IMAGE_RES = "com.google.samples.gridtopager.key.imageRes";
+    private static final String KEY_GALLERY_ITEM = ".key.galleryItem";
 
-    public static ImageFragment newInstance(@DrawableRes int drawableRes) {
+    public static ImageFragment newInstance(@NonNull GalleryItem item) {
         ImageFragment fragment = new ImageFragment();
         Bundle argument = new Bundle();
-        argument.putInt(KEY_IMAGE_RES, drawableRes);
+        argument.putParcelable(KEY_GALLERY_ITEM, item);
         fragment.setArguments(argument);
         return fragment;
     }
@@ -63,7 +63,7 @@ public class ImageFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_image, container, false);
 
         Bundle arguments = getArguments();
-        @DrawableRes int imageRes = arguments.getInt(KEY_IMAGE_RES);
+        GalleryItem item = arguments.getParcelable(KEY_GALLERY_ITEM);
         final MultiTouchImageView imageView = view.findViewById(R.id.image);
 
 
@@ -73,7 +73,7 @@ public class ImageFragment extends Fragment {
             @Override
             public void onDismiss() {
                 Fragment pf = getParentFragment();
-                if (pf != null && pf.getActivity() != null) {
+                if (pf != null && !pf.isRemoving() && pf.getActivity() != null && !pf.getActivity().isFinishing() && !pf.getActivity().isDestroyed()) {
                     pf.getActivity().onBackPressed();
                 }
             }
@@ -84,11 +84,11 @@ public class ImageFragment extends Fragment {
             }
         });
         imageView.setOnTouchListener(listener);
-        imageView.setTransitionName(String.valueOf(imageRes));
+        imageView.setTransitionName(item.getTransitionName());
 
         // Load the image with Glide to prevent OOM error when the image drawables are very large.
         Glide.with(this)
-                .load(imageRes)
+                .load(item.getUri())
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable>

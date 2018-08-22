@@ -17,27 +17,33 @@
 
 package com.google.samples.gridtopager.adapter;
 
-import static com.google.samples.gridtopager.adapter.ImageData.IMAGE_DRAWABLES;
-
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.google.samples.gridtopager.fragment.ImageFragment;
 
+import net.mobileapplab.library.GalleryItem;
+
+import java.util.ArrayList;
+
 public class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
-    public ImagePagerAdapter(Fragment fragment) {
+    private final ArrayList<GalleryItem> list;
+
+    public ImagePagerAdapter(Fragment fragment, @NonNull ArrayList<GalleryItem> list) {
         // Note: Initialize with the child fragment manager.
         super(fragment.getChildFragmentManager());
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return IMAGE_DRAWABLES.length;
+        return list.size();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return ImageFragment.newInstance(IMAGE_DRAWABLES[position]);
+        return ImageFragment.newInstance(list.get(position));
     }
 }

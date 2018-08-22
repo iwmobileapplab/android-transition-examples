@@ -17,9 +17,8 @@
 
 package com.google.samples.gridtopager.adapter;
 
-import static com.google.samples.gridtopager.adapter.ImageData.IMAGE_DRAWABLES;
-
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -41,6 +40,9 @@ import com.google.samples.gridtopager.R;
 import com.google.samples.gridtopager.adapter.GridAdapter.ImageViewHolder;
 import com.google.samples.gridtopager.fragment.ImagePagerFragment;
 
+import net.mobileapplab.library.GalleryItem;
+
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -61,12 +63,15 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
     private final RequestManager requestManager;
     private final ViewHolderListener viewHolderListener;
 
+    private final ArrayList<GalleryItem> galleryItems;
+
     /**
      * Constructs a new grid adapter for the given {@link Fragment}.
      */
-    public GridAdapter(Fragment fragment) {
+    public GridAdapter(Fragment fragment, ArrayList<GalleryItem> list) {
         this.requestManager = Glide.with(fragment);
-        this.viewHolderListener = new ViewHolderListenerImpl(fragment);
+        this.viewHolderListener = new ViewHolderListenerImpl(fragment, list);
+        this.galleryItems = list;
     }
 
     @NonNull
@@ -79,12 +84,12 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        holder.onBind();
+        holder.onBind(galleryItems.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return IMAGE_DRAWABLES.length;
+        return galleryItems.size();
     }
 
 
@@ -95,10 +100,12 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
         private Fragment fragment;
         private AtomicBoolean enterTransitionStarted;
+        private ArrayList<GalleryItem> list;
 
-        ViewHolderListenerImpl(Fragment fragment) {
+        ViewHolderListenerImpl(Fragment fragment, ArrayList<GalleryItem> list) {
             this.fragment = fragment;
             this.enterTransitionStarted = new AtomicBoolean();
+            this.list = list;
         }
 
         @Override
@@ -138,8 +145,8 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
                     .beginTransaction()
                     .setReorderingAllowed(true) // Optimize for shared element transition
                     .addSharedElement(transitioningView, transitioningView.getTransitionName())
-                    .replace(R.id.fragment_container, new ImagePagerFragment(), ImagePagerFragment.class
-                            .getSimpleName())
+                    .replace(R.id.fragment_container, ImagePagerFragment.getFragment(list),
+                            ImagePagerFragment.class.getSimpleName())
                     .addToBackStack(null)
                     .commit();
         }
@@ -170,17 +177,17 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
          * The binding will load the image into the image view, as well as set its transition name for
          * later.
          */
-        void onBind() {
+        void onBind(@NonNull final GalleryItem item) {
             int adapterPosition = getAdapterPosition();
-            setImage(adapterPosition);
+            setImage(adapterPosition, item.getUri());
             // Set the string value of the image resource as the unique transition name for the view.
-            image.setTransitionName(String.valueOf(IMAGE_DRAWABLES[adapterPosition]));
+            image.setTransitionName(item.getTransitionName());
         }
 
-        void setImage(final int adapterPosition) {
+        void setImage(final int adapterPosition, @NonNull final Uri uri) {
             // Load the image with Glide to prevent OOM error when the image drawables are very large.
             requestManager
-                    .load(IMAGE_DRAWABLES[adapterPosition])
+                    .load(uri)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model,

@@ -29,9 +29,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Holds the current image position to be shared between the grid and the pager fragments. This
      * position updated when a grid item is clicked, or when paging the pager.
-     * <p>
-     * In this demo app, the position always points to an image index at the {@link
-     * com.google.samples.gridtopager.adapter.ImageData} class.
      */
     public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";

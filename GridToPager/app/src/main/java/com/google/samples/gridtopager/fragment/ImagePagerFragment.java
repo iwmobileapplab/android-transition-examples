@@ -32,6 +32,9 @@ import com.google.samples.gridtopager.MainActivity;
 import com.google.samples.gridtopager.adapter.ImagePagerAdapter;
 import com.google.samples.gridtopager.R;
 
+import net.mobileapplab.library.GalleryItem;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,12 +45,23 @@ public class ImagePagerFragment extends Fragment {
 
     private ViewPager viewPager;
 
+    private static final String ARGS_GALLERY = "arguments_gallery";
+
+    public static ImagePagerFragment getFragment(@NonNull ArrayList<GalleryItem> gallery) {
+        final ImagePagerFragment fragment = new ImagePagerFragment();
+        final Bundle args = new Bundle();
+        args.putParcelableArrayList(ARGS_GALLERY, gallery);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        ArrayList<GalleryItem> list = getGalleryFromArgs();
         viewPager = (ViewPager) inflater.inflate(R.layout.fragment_pager, container, false);
-        viewPager.setAdapter(new ImagePagerAdapter(this));
+        viewPager.setAdapter(new ImagePagerAdapter(this, list));
         // Set the current position and add a listener that will update the selection coordinator when
         // paging the images.
         viewPager.setCurrentItem(MainActivity.currentPosition);
@@ -66,6 +80,16 @@ public class ImagePagerFragment extends Fragment {
         }
 
         return viewPager;
+    }
+
+    @NonNull
+    private ArrayList<GalleryItem> getGalleryFromArgs() {
+        ArrayList<GalleryItem> list = new ArrayList<>();
+        final Bundle args = getArguments();
+        if (args != null) {
+            list.addAll(args.getParcelableArrayList(ARGS_GALLERY));
+        }
+        return list;
     }
 
     /**
